@@ -2,12 +2,16 @@
 <html>
     <head>
         <link rel="stylesheet" href="styles/style.css">
-        <script src="script/script.js"></script>
         <Title>Project1</Title></head>
     <body>
         <div class="wrapper">
             <div class = "header">H</div>
             <div class = "mainMenu">
+
+                <div class = "chooseMenu">
+                    <p><a href="gamepage.html">Game page</a> </p>
+                </div>
+
                 Drawing a line
                 <form>
                     start X1
@@ -21,7 +25,7 @@
                 </form>
                 <button type = "button" onclick="myFunction()"> Draw a line</button>
             </div>
-            <div class = "mainWindow"><canvas id="myCanvas" width="300" height="300"></canvas>
+            <div class = "mainWindow"><canvas id="myCanvas" width="300" height="300"><script src="script/script.js"></script></canvas>
             </div>
             <div class = "footer"> F</div>
           </div>
