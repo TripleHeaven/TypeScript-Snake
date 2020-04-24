@@ -1,3 +1,4 @@
+export {Grid};
 class Grid{
     grid : Array<object>;
     gridsize: number;
