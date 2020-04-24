@@ -1,44 +1,38 @@
-canvas{
-    background-color: palegoldenrod;
-}
-
-.wrapper {
-    
+.wrapper{
+    margin-left: 590px;
     display: grid;
-    grid-template-columns: 200px 900px;
-    grid-template-rows: 100px 600px 100px;
+    grid-template-columns: 100px 640px;
+    grid-template-rows: 150px 420px 100px;
 }
 .wrapper div{
-    border-style: dashed;
-    border-width: 1px;
+    border-style: ridge;
     border-color: black;
+    border-width: 1px;
 }
-.header{
+.header {
     grid-row-start: 1;
     grid-row-end: 2;
-    grid-column-start:1 ;
+    grid-column-start: 1;
     grid-column-end: 3;
 }
-.mainmenu{
+.mainmenu {
     grid-row-start: 2;
     grid-row-end: 3;
     grid-column-start: 1;
     grid-column-end: 2;
 }
-
-.mainWindow{
+.mainwindow {
     grid-row-start: 2;
     grid-row-end: 3;
     grid-column-start: 2;
     grid-column-end: 3;
 }
-.footer{
+.footer {
     grid-row-start: 3;
     grid-row-end: 4;
     grid-column-start: 1;
     grid-column-end: 3;
 }
-.chooseMenu{
-    background-color: aqua;
-    margin: 2px;
+canvas{
+    background-color: lavenderblush;
 }
