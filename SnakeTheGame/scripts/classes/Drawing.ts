@@ -1,12 +1,12 @@
 import {Grid} from "./Grid";
-
+export {Drawing};
 class Drawing{
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
     squareSize : number;
-    constructor (squareSize : number){
-        this.canvas = document.getElementById("myCanvas") as HTMLCanvasElement;
-        this.ctx = this.canvas.getContext("2d");
+    constructor (squareSize : number, canvas : HTMLCanvasElement, ctx: CanvasRenderingContext2D){
+        this.canvas = canvas;
+        this.ctx = ctx;
         this.squareSize = squareSize;
     }
     Draw(obj : Grid){
@@ -17,14 +17,15 @@ class Drawing{
         for (let ix = 0 ; ix < obj.gridsize; ix++){
             for (let iy = 0 ; iy < obj.gridsize; iy ++){
                 // 0 - field 1 - headsnake 2 - snakepart 3 - apple 4 - bonusApple
-                switch (obj.gridsize[ix][iy].case) {
+                switch (obj.grid[ix][iy].state) {
                     case 0:
                         //drawing Field
-                        ctx.beginPath();
-                        ctx.rect(currentX, currentY, this.squareSize, this.squareSize);
-                        //ctx.fillStyle = "#0095DD";
-                        //ctx.fill();
-                        ctx.closePath();
+                        this.ctx.beginPath();
+                        this.ctx.rect(currentX, currentY, this.squareSize, this.squareSize);
+                       // this.ctx.fillStyle = "#0095DD";
+                       // this.ctx.fill();
+                       this.ctx.stroke();
+                       // this.ctx.closePath();
                       break;
                     case 4:
                       alert( 'В точку!' );
@@ -38,6 +39,7 @@ class Drawing{
                   currentX +=this.squareSize;
             }
             currentY += this.squareSize;
+            currentX = 0;
         }
     }
 }

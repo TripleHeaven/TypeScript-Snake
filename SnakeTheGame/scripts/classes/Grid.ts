@@ -4,6 +4,7 @@ class Grid{
     gridsize: number;
     constructor(size: number){
         this.gridsize = size;
+        this.grid = [];
         // Making a grid from size
         // Grid structure : 0 - x 1 - y 2 - state
         // State : 0 - none 1 - headsnake 2 - snakepart 3 - apple 4 - bonusApple
@@ -13,6 +14,7 @@ class Grid{
                 this.grid[x][y] = {x : 0,y : 0,state : 0};
                 this.grid[x][y].x = x;
                 this.grid[x][y].y = y;
+                this.grid[x][y].state = 0;
             }
         }
     }
