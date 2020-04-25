@@ -170,7 +170,9 @@ function () {
   }
 
   Drawing.prototype.Draw = function (obj) {
-    // quantity of squares according to px size and canvas width
+    // clearing the canvas
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // quantity of squares according to px size and canvas width
+
     var brickCount = this.canvas.width / this.squareSize;
     var currentX = 0;
     var currentY = 0;
@@ -189,8 +191,13 @@ function () {
 
             break;
 
-          case 4:
-            alert('В точку!');
+          case 1:
+            this.ctx.beginPath();
+            this.ctx.rect(currentX, currentY, this.squareSize, this.squareSize);
+            this.ctx.fillStyle = "#0095DD";
+            this.ctx.fill();
+            this.ctx.stroke();
+            this.ctx.closePath();
             break;
 
           case 5:
@@ -213,6 +220,81 @@ function () {
 }();
 
 exports.Drawing = Drawing;
+},{}],"scripts/classes/snakeHead.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var SnakeHead =
+/** @class */
+function () {
+  function SnakeHead(startX, startY, speed, forward, grid) {
+    this.startX = startX;
+    this.startY = startY;
+    this.speed = speed;
+    this.forward = forward;
+    this.grid = grid;
+    this.grid.grid[this.startX][this.startY].state = 1;
+  }
+
+  SnakeHead.prototype.move = function () {
+    switch (this.forward) {
+      case "left":
+        this.speedX = 0;
+        this.speedY = -1;
+        break;
+
+      case "up":
+        this.speedX = -1;
+        this.speedY = 0;
+        break;
+
+      case "right":
+        this.speedX = 0;
+        this.speedY = 1;
+        break;
+
+      case "down":
+        this.speedX = 1;
+        this.speedY = 0;
+    }
+
+    this.grid.grid[this.startX][this.startY].state = 0;
+    this.grid.grid[this.startX + this.speedX][this.startY + this.speedY].state = 1;
+    this.startX += this.speedX;
+    this.startY += this.speedY;
+  };
+
+  return SnakeHead;
+}();
+
+exports.SnakeHead = SnakeHead;
+},{}],"scripts/classes/InformtationToShow.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var InformationToShow =
+/** @class */
+function () {
+  function InformationToShow(sh) {
+    this.sh = sh;
+  }
+
+  InformationToShow.prototype.showDirection = function (id) {
+    // shows current direction on the screen 
+    var outsidelabel = document.getElementById(id);
+    outsidelabel.innerHTML = this.sh.forward;
+  };
+
+  return InformationToShow;
+}();
+
+exports.InformationToShow = InformationToShow;
 },{}],"scripts/mainCycle.ts":[function(require,module,exports) {
 "use strict";
 
@@ -222,7 +304,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var Grid_1 = require("./classes/Grid");
 
-var Drawing_1 = require("./classes/Drawing"); //initializing things
+var Drawing_1 = require("./classes/Drawing");
+
+var snakeHead_1 = require("./classes/snakeHead");
+
+var InformtationToShow_1 = require("./classes/InformtationToShow"); //initializing things
 
 
 var button = document.getElementById("my_button");
@@ -235,13 +321,46 @@ function start() {
   var csx = cs.getContext("2d");
   var grid = new Grid_1.Grid(10);
   var drawing = new Drawing_1.Drawing(40, cs, csx);
+  var snakeH = new snakeHead_1.SnakeHead(5, 5, 1, "right", grid);
+  var infoShow = new InformtationToShow_1.InformationToShow(snakeH);
+  document.addEventListener("keydown", keyDownHandler, false); //document.addEventListener("keyup", keyUpHandler, false);
+
+  function keyDownHandler(e) {
+    if (e.key == "Right" || e.key == "ArrowRight") {
+      snakeH.forward = "right";
+    } else if (e.key == "Left" || e.key == "ArrowLeft") {
+      snakeH.forward = "left";
+    } else if (e.key == "Down" || e.key == "ArrowDown") {
+      snakeH.forward = "down";
+    } else if (e.key == "Up" || e.key == "ArrowUp") {
+      snakeH.forward = "up";
+    }
+  }
+  /*function keyUpHandler(e) {
+      if(e.key == "Right" || e.key == "ArrowRight") {
+          rightPressed = false;
+      }
+      else if(e.key == "Left" || e.key == "ArrowLeft") {
+          leftPressed = false;
+      }
+      else if (e.key == "Down" || e.key == "ArrowDown"){
+          downPressed = false;
+      }
+  }
+  */
+
+
   drawing.Draw(grid);
+  setInterval(function () {
+    drawing.Draw(grid), infoShow.showDirection("dirShow");
+    snakeH.move();
+  }, 400);
 }
 
 function go() {
   alert("hello");
 }
-},{"./classes/Grid":"scripts/classes/Grid.ts","./classes/Drawing":"scripts/classes/Drawing.ts"}],"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./classes/Grid":"scripts/classes/Grid.ts","./classes/Drawing":"scripts/classes/Drawing.ts","./classes/snakeHead":"scripts/classes/snakeHead.ts","./classes/InformtationToShow":"scripts/classes/InformtationToShow.ts"}],"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -269,7 +388,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39865" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33771" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

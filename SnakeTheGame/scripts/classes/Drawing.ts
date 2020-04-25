@@ -10,6 +10,8 @@ class Drawing{
         this.squareSize = squareSize;
     }
     Draw(obj : Grid){
+        // clearing the canvas
+        this.ctx.clearRect(0,0 , this.canvas.width,this.canvas.height)
         // quantity of squares according to px size and canvas width
         let brickCount = this.canvas.width / this.squareSize;
         let currentX = 0 ;
@@ -27,8 +29,14 @@ class Drawing{
                        this.ctx.stroke();
                        // this.ctx.closePath();
                       break;
-                    case 4:
-                      alert( 'В точку!' );
+                    case 1:
+                        this.ctx.beginPath();
+                        this.ctx.rect(currentX, currentY, this.squareSize, this.squareSize);
+                        this.ctx.fillStyle = "#0095DD";
+                        this.ctx.fill();
+                       this.ctx.stroke();
+                       this.ctx.closePath();
+                       
                       break;
                     case 5:
                       alert( 'Перебор' );
@@ -41,5 +49,6 @@ class Drawing{
             currentY += this.squareSize;
             currentX = 0;
         }
+        
     }
 }
