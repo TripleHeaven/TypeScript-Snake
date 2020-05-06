@@ -200,6 +200,15 @@ function () {
             this.ctx.closePath();
             break;
 
+          case 3:
+            this.ctx.beginPath();
+            this.ctx.rect(currentX, currentY, this.squareSize, this.squareSize);
+            this.ctx.fillStyle = "#EF2020";
+            this.ctx.fill();
+            this.ctx.stroke();
+            this.ctx.closePath();
+            break;
+
           case 5:
             alert('Перебор');
             break;
@@ -299,24 +308,79 @@ Object.defineProperty(exports, "__esModule", {
 var InformationToShow =
 /** @class */
 function () {
-  function InformationToShow(sh) {
+  function InformationToShow(sh, logic) {
     this.sh = sh;
+    this.logic = logic;
   }
 
-  InformationToShow.prototype.showMainInfo = function (idDir, idX, idY) {
+  InformationToShow.prototype.showMainInfo = function (idDir, idX, idY, idScore) {
     // shows current direction on the screen 
     var outsidelabelDir = document.getElementById(idDir);
     var outsidelabelX = document.getElementById(idX);
     var outsidelabelY = document.getElementById(idY);
+    var outsidelabelScore = document.getElementById(idScore);
     outsidelabelDir.innerHTML = this.sh.forward;
     outsidelabelX.innerHTML = this.sh.startX.toString();
     outsidelabelY.innerHTML = this.sh.startY.toString();
+    outsidelabelScore.innerHTML = this.logic.score.toString();
   };
 
   return InformationToShow;
 }();
 
 exports.InformationToShow = InformationToShow;
+},{}],"scripts/classes/Logic.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+var GameLogic =
+/** @class */
+function () {
+  function GameLogic(sh, grid) {
+    this.sh = sh;
+    this.grid = grid;
+    this.score = 0;
+  }
+
+  GameLogic.prototype.eventChecker = function () {
+    for (var ix = 0; ix < this.grid.gridsize; ix++) {
+      for (var iy = 0; iy < this.grid.gridsize; iy++) {
+        // 0 - field 1 - headsnake 2 - snakepart 3 - apple 4 - bonusApple
+        // checking if apple is there and snakeHead is there
+        if (this.grid.grid[ix][iy].state == 3 && this.sh.startX + this.sh.speedX == ix && this.sh.startY + this.sh.speedY == iy) {
+          this.score = this.score + 1;
+          this.grid.grid[ix][iy].state == 0;
+        }
+      }
+    }
+  }; // spawning an apple in a random place
+
+
+  GameLogic.prototype.spawnApple = function () {
+    // generating random place to spawn
+    var rndX = getRandomInt(0, this.grid.gridsize - 1);
+    var rndY = getRandomInt(0, this.grid.gridsize - 1); //checking if head is here
+
+    /*if (this.grid.grid[rndX][rndY].state == 1){
+        this.spawnApple();
+    }*/
+
+    this.grid.grid[rndX][rndY].state = 3;
+  };
+
+  return GameLogic;
+}();
+
+exports.GameLogic = GameLogic;
 },{}],"scripts/mainCycle.ts":[function(require,module,exports) {
 "use strict";
 
@@ -330,7 +394,9 @@ var Drawing_1 = require("./classes/Drawing");
 
 var snakeHead_1 = require("./classes/snakeHead");
 
-var InformtationToShow_1 = require("./classes/InformtationToShow"); //initializing things
+var InformtationToShow_1 = require("./classes/InformtationToShow");
+
+var Logic_1 = require("./classes/Logic"); //initializing things
 
 
 var button = document.getElementById("my_button");
@@ -344,7 +410,8 @@ function start() {
   var grid = new Grid_1.Grid(15);
   var drawing = new Drawing_1.Drawing(grid, cs, csx);
   var snakeH = new snakeHead_1.SnakeHead(0, 0, 1, "right", grid);
-  var infoShow = new InformtationToShow_1.InformationToShow(snakeH);
+  var logic = new Logic_1.GameLogic(snakeH, grid);
+  var infoShow = new InformtationToShow_1.InformationToShow(snakeH, logic);
   document.addEventListener("keydown", keyDownHandler, false); //document.addEventListener("keyup", keyUpHandler, false);
 
   function keyDownHandler(e) {
@@ -374,15 +441,17 @@ function start() {
 
   drawing.Draw(grid);
   setInterval(function () {
-    drawing.Draw(grid), infoShow.showMainInfo("dirShow", "xcoordinate", "ycoordinate");
-    snakeH.move();
-  }, 100);
+    drawing.Draw(grid), infoShow.showMainInfo("dirShow", "xcoordinate", "ycoordinate", "scoreShow"), logic.eventChecker(), snakeH.move();
+  }, 200);
+  setInterval(function () {
+    logic.spawnApple();
+  }, 5000);
 }
 
 function go() {
   alert("hello");
 }
-},{"./classes/Grid":"scripts/classes/Grid.ts","./classes/Drawing":"scripts/classes/Drawing.ts","./classes/snakeHead":"scripts/classes/snakeHead.ts","./classes/InformtationToShow":"scripts/classes/InformtationToShow.ts"}],"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./classes/Grid":"scripts/classes/Grid.ts","./classes/Drawing":"scripts/classes/Drawing.ts","./classes/snakeHead":"scripts/classes/snakeHead.ts","./classes/InformtationToShow":"scripts/classes/InformtationToShow.ts","./classes/Logic":"scripts/classes/Logic.ts"}],"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -410,7 +479,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39701" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43907" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

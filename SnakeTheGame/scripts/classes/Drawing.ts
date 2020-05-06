@@ -38,6 +38,14 @@ class Drawing{
                        this.ctx.closePath();
                        
                       break;
+                    case 3:
+                        this.ctx.beginPath();
+                        this.ctx.rect(currentX,currentY, this.squareSize,this.squareSize);
+                        this.ctx.fillStyle = "#EF2020";
+                        this.ctx.fill();
+                        this.ctx.stroke();
+                        this.ctx.closePath();
+                        break;
                     case 5:
                       alert( 'Перебор' );
                       break;

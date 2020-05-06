@@ -1,7 +1,8 @@
 import {Grid} from "./classes/Grid";
 import {Drawing} from "./classes/Drawing";
 import {SnakeHead} from "./classes/snakeHead";
-import {InformationToShow} from "./classes/InformtationToShow"
+import {InformationToShow} from "./classes/InformtationToShow";
+import {GameLogic} from "./classes/Logic";
 //initializing things
 const button = document.getElementById("my_button");
 button.addEventListener("click", (e:Event) => start());
@@ -11,7 +12,9 @@ let csx = cs.getContext("2d") as CanvasRenderingContext2D;
 let grid = new Grid(15);
 let drawing = new Drawing(grid,cs, csx);
 let snakeH = new SnakeHead(0,0,1,"right",grid);
-let infoShow = new InformationToShow (snakeH);
+let logic = new GameLogic(snakeH,grid);
+let infoShow = new InformationToShow (snakeH, logic);
+
 
 document.addEventListener("keydown", keyDownHandler, false);
 //document.addEventListener("keyup", keyUpHandler, false);
@@ -45,13 +48,9 @@ function keyDownHandler(e) {
 */
 
 drawing.Draw(grid);
-    setInterval( function() { drawing.Draw(grid),  infoShow.showMainInfo("dirShow","xcoordinate","ycoordinate");snakeH.move()}, 100);
-    
+    setInterval( function() { drawing.Draw(grid),  infoShow.showMainInfo("dirShow","xcoordinate","ycoordinate","scoreShow"), logic.eventChecker(),snakeH.move()}, 200);
+    setInterval(function(){logic.spawnApple()} ,5000 );
 }
-
-
-
-
 function go(){
     alert("hello");
 }
