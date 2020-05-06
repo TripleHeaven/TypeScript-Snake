@@ -27,6 +27,33 @@
     grid-column-start: 2;
     grid-column-end: 3;
 }
+.mainwindow .xcor {
+    float: right;
+    position: relative;
+    right: 40px;
+    top: 20px;
+}
+.mainwindow .ycor {
+    float: right;
+    position: relative;
+    right: 10px;
+    top: 20px;
+}
+.mainwindow .xlabel {
+    float: right;
+    position: relative;
+    right: 55px;
+}
+.mainwindow .ylabel {
+    float: right;
+    position: relative;
+    right: 25px;
+}
+.mainwindow .directionShow {
+    float: right;
+    position : relative;
+    right: -2px;
+}
 .footer {
     grid-row-start: 3;
     grid-row-end: 4;

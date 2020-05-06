@@ -163,10 +163,10 @@ Object.defineProperty(exports, "__esModule", {
 var Drawing =
 /** @class */
 function () {
-  function Drawing(squareSize, canvas, ctx) {
+  function Drawing(obj, canvas, ctx) {
     this.canvas = canvas;
     this.ctx = ctx;
-    this.squareSize = squareSize;
+    this.squareSize = canvas.width / obj.gridsize;
   }
 
   Drawing.prototype.Draw = function (obj) {
@@ -261,10 +261,28 @@ function () {
         this.speedY = 0;
     }
 
-    this.grid.grid[this.startX][this.startY].state = 0;
-    this.grid.grid[this.startX + this.speedX][this.startY + this.speedY].state = 1;
-    this.startX += this.speedX;
-    this.startY += this.speedY;
+    if (this.startX + this.speedX > this.grid.gridsize - 1) {
+      this.grid.grid[this.startX][this.startY].state = 0;
+      this.grid.grid[0][this.startY + this.speedY].state = 1;
+      this.startX = 0;
+    } else if (this.startY + this.speedY > this.grid.gridsize - 1) {
+      this.grid.grid[this.startX][this.startY].state = 0;
+      this.grid.grid[this.startX + this.speedX][0].state = 1;
+      this.startY = 0;
+    } else if (this.startX + this.speedX < 0) {
+      this.grid.grid[this.startX][this.startY].state = 0;
+      this.grid.grid[this.grid.gridsize - 1][this.startY].state = 1;
+      this.startX = this.grid.gridsize - 1;
+    } else if (this.startY + this.speedY < 0) {
+      this.grid.grid[this.startX][this.startY].state = 0;
+      this.grid.grid[this.startX][this.grid.gridsize - 1].state = 1;
+      this.startY = this.grid.gridsize - 1;
+    } else {
+      this.grid.grid[this.startX][this.startY].state = 0;
+      this.grid.grid[this.startX + this.speedX][this.startY + this.speedY].state = 1;
+      this.startX += this.speedX;
+      this.startY += this.speedY;
+    }
   };
 
   return SnakeHead;
@@ -285,10 +303,14 @@ function () {
     this.sh = sh;
   }
 
-  InformationToShow.prototype.showDirection = function (id) {
+  InformationToShow.prototype.showMainInfo = function (idDir, idX, idY) {
     // shows current direction on the screen 
-    var outsidelabel = document.getElementById(id);
-    outsidelabel.innerHTML = this.sh.forward;
+    var outsidelabelDir = document.getElementById(idDir);
+    var outsidelabelX = document.getElementById(idX);
+    var outsidelabelY = document.getElementById(idY);
+    outsidelabelDir.innerHTML = this.sh.forward;
+    outsidelabelX.innerHTML = this.sh.startX.toString();
+    outsidelabelY.innerHTML = this.sh.startY.toString();
   };
 
   return InformationToShow;
@@ -319,9 +341,9 @@ button.addEventListener("click", function (e) {
 function start() {
   var cs = document.getElementById("gamewindow");
   var csx = cs.getContext("2d");
-  var grid = new Grid_1.Grid(10);
-  var drawing = new Drawing_1.Drawing(40, cs, csx);
-  var snakeH = new snakeHead_1.SnakeHead(5, 5, 1, "right", grid);
+  var grid = new Grid_1.Grid(15);
+  var drawing = new Drawing_1.Drawing(grid, cs, csx);
+  var snakeH = new snakeHead_1.SnakeHead(0, 0, 1, "right", grid);
   var infoShow = new InformtationToShow_1.InformationToShow(snakeH);
   document.addEventListener("keydown", keyDownHandler, false); //document.addEventListener("keyup", keyUpHandler, false);
 
@@ -352,9 +374,9 @@ function start() {
 
   drawing.Draw(grid);
   setInterval(function () {
-    drawing.Draw(grid), infoShow.showDirection("dirShow");
+    drawing.Draw(grid), infoShow.showMainInfo("dirShow", "xcoordinate", "ycoordinate");
     snakeH.move();
-  }, 400);
+  }, 100);
 }
 
 function go() {
@@ -388,7 +410,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33771" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39701" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

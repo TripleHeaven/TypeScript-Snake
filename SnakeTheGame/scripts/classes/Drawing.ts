@@ -4,10 +4,10 @@ class Drawing{
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
     squareSize : number;
-    constructor (squareSize : number, canvas : HTMLCanvasElement, ctx: CanvasRenderingContext2D){
+    constructor (obj : Grid, canvas : HTMLCanvasElement, ctx: CanvasRenderingContext2D){
         this.canvas = canvas;
         this.ctx = ctx;
-        this.squareSize = squareSize;
+        this.squareSize = canvas.width / obj.gridsize;
     }
     Draw(obj : Grid){
         // clearing the canvas

@@ -8,9 +8,9 @@ button.addEventListener("click", (e:Event) => start());
 function start(){
 let cs = document.getElementById("gamewindow") as HTMLCanvasElement;
 let csx = cs.getContext("2d") as CanvasRenderingContext2D;
-let grid = new Grid(10);
-let drawing = new Drawing(40,cs, csx);
-let snakeH = new SnakeHead(5,5,1,"right",grid);
+let grid = new Grid(15);
+let drawing = new Drawing(grid,cs, csx);
+let snakeH = new SnakeHead(0,0,1,"right",grid);
 let infoShow = new InformationToShow (snakeH);
 
 document.addEventListener("keydown", keyDownHandler, false);
@@ -45,7 +45,7 @@ function keyDownHandler(e) {
 */
 
 drawing.Draw(grid);
-    setInterval( function() { drawing.Draw(grid), infoShow.showDirection("dirShow");snakeH.move()}, 400);
+    setInterval( function() { drawing.Draw(grid),  infoShow.showMainInfo("dirShow","xcoordinate","ycoordinate");snakeH.move()}, 100);
     
 }
 
