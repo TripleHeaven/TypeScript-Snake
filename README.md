@@ -1,2 +1,2 @@
-# learningStuff
-learningStuff
+# TypeScript, JS, Snake Realization
+
